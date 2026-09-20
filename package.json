@@ -31,7 +31,7 @@
     "tui"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "description": "Autonomous software engineering orchestrator built on top of OpenCode",
   "dependencies": {
     "@opencode-ai/sdk": "^1.17.13",

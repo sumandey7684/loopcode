@@ -88,9 +88,30 @@ bun run cli:dev
 **Tests**
 
 ```bash
-bun run test          # Full suite (~110/115 pass, 95.7%)
+bun run test          # 113 passing / 115 total (98.3%); 2 known failing orchestrator tests
 bun run test:watch    # Watch mode
 ```
+
+---
+
+## Current Status
+
+**Functional MVP — production hardening in progress.**
+
+| Area | State |
+| --- | --- |
+| Core orchestration | Functional (`plan → execute → verify → replan`) |
+| Agents | 5 modules: planner, engineer, reviewer, verifier, base |
+| CLI / TUI | Functional (Ink interactive + `--headless`) |
+| SQLite session persistence | Implemented |
+| Verification | Implemented (`VerifierAgent` + legacy fallback; integration/lint layers incomplete — see [docs/TASKS.md](docs/TASKS.md)) |
+| Cost / loop safety | Implemented (budget caps, oscillation detection) |
+| Automated tests | **113 passing / 115 total** (98.3% pass rate) |
+| Known failing tests | **2** orchestrator retry/replan tests |
+| Live LLM / OpenCode E2E | Requires configured provider authentication (not claimed verified here) |
+| CI | Ubuntu + macOS (Windows exercised locally; not in CI matrix) |
+
+**Debt / TODO:** [docs/TASKS.md](docs/TASKS.md#debt--)
 
 ---
 
@@ -115,76 +136,6 @@ bun run test:watch    # Watch mode
 *Command-line mode with OpenCode server (requires auth to run full plan→execute→verify)*
 
 **Note:** Full goal orchestration requires a configured LLM provider (OpenAI, Anthropic, Google, or Antigravity local proxy). Screenshots show UI flow; cost/verification demo pending auth.
-
----
-
-## Project Metrics & Stats
-
-### Codebase
-
-| Metric | Value |
-| --- | --- |
-| TypeScript files | 100 |
-| Total lines of code | 9,778 |
-| Agent modules | 5 (planner, engineer, reviewer, verifier, base) |
-| Major subsystems | 16 |
-| Exported classes/interfaces/types | 132 |
-| Exported functions | 90 |
-| Database tables | 18 (17 standard + 1 FTS virtual) |
-
-### Testing
-
-| Metric | Value |
-| --- | --- |
-| Test files | 27 |
-| Total tests | 115 |
-| Passing | 110 |
-| Pass rate | **95.7%** |
-| Suite duration | 50.33s |
-| Coverage | Per-file report ([enable with `bun test --coverage`](docs/VERIFICATION.md)) |
-
-### Documentation
-
-| Metric | Value |
-| --- | --- |
-| Doc files | 9 (consolidated in `docs/`) |
-| Total doc lines | 423 |
-| Architecture sections | 5 |
-| Decision records | 6 |
-
-### Dependencies
-
-| Type | Count |
-| --- | --- |
-| Production | 13 |
-| Development | 7 |
-| **Total** | **20** |
-
-### Deployment Artifacts
-
-| Artifact | Size |
-| --- | --- |
-| Compiled (`dist/`) | 0.3 MB |
-| Node modules | 330.6 MB |
-
-### Project Maturity
-
-| Component | Completion | Notes |
-| --- | --- | --- |
-| Core orchestrator | 85–90% | Stable; 5 flaky orchestrator tests deferred |
-| Verification | ~70% | VerifierAgent + fallback integrated |
-| Knowledge/semantic | 60–75% | Indexer fixed; vector search optional |
-| CLI/TUI | ~85% | Both modes working |
-| **Overall** | **95.7%** | **Production-ready** |
-
-### Recent Work (this sequence)
-
-| Phase | Commits | Changes |
-| --- | --- | --- |
-| Indexer fix | 1 | 2 files, 4 LoC |
-| ResearcherAgent removal | 1 | 9 files, 133 LoC |
-| EBUSY cleanup | 2 | 6 files, 228 LoC |
-| **Total** | **4** | **17 files, 365 LoC** |
 
 ---
 
@@ -234,21 +185,6 @@ Everything lives under [`docs/`](docs/README.md):
 
 ---
 
-## Project status
-
-| Area                 | Completion | Notes                                                     |
-| -------------------- | ---------- | --------------------------------------------------------- |
-| Core orchestrator    | ~85–90%    | Main loop stable; retry/replan edge cases                 |
-| Verification         | ~70%       | Agent path live; integration layer stubbed; no lint layer |
-| Knowledge / semantic | ~60–75%    | Indexer + optional `fastembed` / `sqlite-vec`             |
-| Researcher agent     | —          | Removed (dead code; never wired)                          |
-| CLI / TUI            | ~85%       | Both modes work; OpenCode server must be free on port     |
-| Tests                | ~90.6%     | 106/117 pass; Windows `EBUSY` SQLite + timeouts           |
-
-**Debt / TODO:** [docs/TASKS.md](docs/TASKS.md#debt--)
-
----
-
 ## Development
 
 ```bash
@@ -281,7 +217,7 @@ Scripts: `cli:dev` → `bun dist/index.js --headless` · `tui:dev` → `bun dist
 
 Personal research project. Issues and PRs welcome for bugs and docs.
 
-1. `bun run test` (expect ~90%+ pass)
+1. Run `bun test` before submitting changes. The current branch has two known orchestrator test failures; see [Current Status](#current-status) and [Known limitations](#known-limitations).
 2. `bun run lint` and `bun run format`
 3. Update [`docs/`](docs/) when behavior or architecture changes
 4. Prefer clear commit messages; reference issues when applicable
@@ -290,10 +226,12 @@ Personal research project. Issues and PRs welcome for bugs and docs.
 
 ## Known limitations
 
-- **Windows:** SQLite file locks can fail test cleanup (`EBUSY`) — does not block the app.
+- **Tests:** 2 known failing orchestrator tests (retry path and replan-after-exhausted-retries); not skipped.
+- **Live E2E:** Full plan→execute→verify against a real LLM requires OpenCode provider auth; UI/CLI smoke without credentials does not prove end-to-end model execution.
+- **Windows:** SQLite file locks can fail test cleanup (`EBUSY`) in some environments — separate from the two known orchestrator failures above.
 - **OpenCode port:** default server port `4096` must be free; set `OPENCODE_SERVER_PASSWORD`.
 - **LSP:** `LSPClient` spawns `npx typescript-language-server`.
-- **`package.json` license field:** still `ISC` while `LICENSE` is MIT — tracked as debt.
+- **Verification debt:** integration-test layer stubbed; lint verification layer not wired — [docs/TASKS.md](docs/TASKS.md).
 
 ---
 
