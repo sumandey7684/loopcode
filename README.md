@@ -96,23 +96,25 @@ bun run test:watch    # Watch mode
 
 ## Live Demo
 
-Screenshots from a live Windows run (`bun run tui:dev` / headless CLI). OpenCode binds `127.0.0.1:4096`; provider login is required for full plan → execute → verify model work.
-
 ### Interactive TUI
 
-![LoopCode TUI startup — directory trust](assets/loopcode-tui-startup.png)
+![LoopCode TUI startup — trust directory prompt](assets/loopcode-tui-startup.png)
 
-*Startup: Welcome splash + directory trust gate (`Yes, trust permanently` / session / exit).*
+*Session initialization with trust/permission gate*
 
-![LoopCode TUI session — provider connect](assets/loopcode-tui-session.png)
+### TUI Provider Setup
 
-*Active onboarding: “Connect an LLM Provider” (API key/OAuth, Antigravity proxy, or skip). OpenCode may report empty provider catalog until credentials are saved.*
+![LoopCode TUI — connect LLM provider](assets/loopcode-tui-session.png)
 
-### CLI headless mode
+*Provider configuration menu (API key, OAuth, or local proxy)*
 
-![LoopCode CLI headless run](assets/loopcode-cli-output.png)
+### Headless CLI
 
-*Headless invocation: `bun dist/index.js --headless "…"` — live exit code `0` with OpenCode server start; full orchestration needs prior `/login`.*
+![LoopCode CLI — headless execution](assets/loopcode-cli-output.png)
+
+*Command-line mode with OpenCode server (requires auth to run full plan→execute→verify)*
+
+**Note:** Full goal orchestration requires a configured LLM provider (OpenAI, Anthropic, Google, or Antigravity local proxy). Screenshots show UI flow; cost/verification demo pending auth.
 
 ---
 
