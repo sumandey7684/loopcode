@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'bun:test';
-import * as fs from 'node:fs';
 import { BudgetExceededError, CostEngine } from '../src/cost/engine.js';
 import { safeBranchName } from '../src/scheduler/worktree.js';
 
@@ -11,14 +10,12 @@ describe('Exit codes and safety checks', () => {
   });
 
   it('CostEngine.terminateDueToBudget throws BudgetExceededError', () => {
-    const testDb = 'test_budget_exit.db';
-    if (fs.existsSync(testDb)) fs.unlinkSync(testDb);
-    const engine = new CostEngine(testDb);
+    // :memory: avoids Windows EBUSY when unlinking a WAL-backed file DB
+    const engine = new CostEngine(':memory:');
     try {
       expect(() => engine.terminateDueToBudget('Task cost exceeded')).toThrow(BudgetExceededError);
     } finally {
       engine.close();
-      if (fs.existsSync(testDb)) fs.unlinkSync(testDb);
     }
   });
 

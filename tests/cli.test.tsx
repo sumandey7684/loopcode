@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
+import { describe, it, expect } from 'bun:test';
 import { isDangerousDirectory, checkTrust } from '../src/cli/trust.js';
 import { detectTerminal } from '../src/cli/terminal-setup.js';
 import { renderDiff } from '../src/cli/diff.js';
@@ -9,23 +9,8 @@ import { render } from 'ink-testing-library';
 import { ThemeProvider } from '../src/cli/theme-context.js';
 import { buildTheme } from '../src/cli/theme.js';
 import React from 'react';
-import * as fs from 'node:fs';
 
 describe('LoopCode v3 CLI Features', () => {
-  const testDb = 'test_loopcode_cli.db';
-
-  beforeEach(() => {
-    if (fs.existsSync(testDb)) {
-      fs.unlinkSync(testDb);
-    }
-  });
-
-  afterEach(() => {
-    if (fs.existsSync(testDb)) {
-      fs.unlinkSync(testDb);
-    }
-  });
-
   describe('Trust Verification & Dangerous Directories', () => {
     it('should correctly identify dangerous system and home directories', () => {
       expect(isDangerousDirectory('/')).toBe(true);
@@ -95,47 +80,50 @@ describe('LoopCode v3 CLI Features', () => {
 
   describe('Session Lifecycle Database Storage', () => {
     it('should store and query sessions correctly in the database', () => {
-      const memory = new Memory(testDb);
-      const sessionId = 'session-test-id-123';
-      const goalId = 'goal-task-id';
+      // :memory: avoids Windows EBUSY on file unlink after Memory.close()
+      const memory = new Memory(':memory:');
+      try {
+        const sessionId = 'session-test-id-123';
+        const goalId = 'goal-task-id';
 
-      // Setup reference task
-      memory.createTask(goalId, 'Original Goal', 'planning');
+        // Setup reference task
+        memory.createTask(goalId, 'Original Goal', 'planning');
 
-      // Create Session
-      memory.createSession(sessionId, 'Test Session', goalId);
+        // Create Session
+        memory.createSession(sessionId, 'Test Session', goalId);
 
-      // Verify Retrieve Session
-      const session = memory.getSession(sessionId);
-      expect(session).toBeDefined();
-      expect(session?.name).toBe('Test Session');
-      expect(session?.status).toBe('active');
+        // Verify Retrieve Session
+        const session = memory.getSession(sessionId);
+        expect(session).toBeDefined();
+        expect(session?.name).toBe('Test Session');
+        expect(session?.status).toBe('active');
 
-      // Update Session Status
-      memory.updateSessionStatus(sessionId, 'paused');
-      expect(memory.getSession(sessionId)?.status).toBe('paused');
+        // Update Session Status
+        memory.updateSessionStatus(sessionId, 'paused');
+        expect(memory.getSession(sessionId)?.status).toBe('paused');
 
-      // Rename Session
-      memory.renameSession(sessionId, 'Renamed TUI Session');
-      expect(memory.getSession(sessionId)?.name).toBe('Renamed TUI Session');
+        // Rename Session
+        memory.renameSession(sessionId, 'Renamed TUI Session');
+        expect(memory.getSession(sessionId)?.name).toBe('Renamed TUI Session');
 
-      // Update Activity Details
-      memory.updateSessionActivity(sessionId, 12, 0.45, 1200);
-      const updated = memory.getSession(sessionId);
-      expect(updated?.message_count).toBe(12);
-      expect(updated?.total_cost).toBeCloseTo(0.45);
-      expect(updated?.context_usage).toBe(1200);
+        // Update Activity Details
+        memory.updateSessionActivity(sessionId, 12, 0.45, 1200);
+        const updated = memory.getSession(sessionId);
+        expect(updated?.message_count).toBe(12);
+        expect(updated?.total_cost).toBeCloseTo(0.45);
+        expect(updated?.context_usage).toBe(1200);
 
-      // Query Sessions list
-      const list = memory.getSessions();
-      expect(list.length).toBe(1);
-      expect(list[0].id).toBe(sessionId);
+        // Query Sessions list
+        const list = memory.getSessions();
+        expect(list.length).toBe(1);
+        expect(list[0].id).toBe(sessionId);
 
-      // Delete Session
-      memory.deleteSession(sessionId);
-      expect(memory.getSession(sessionId)).toBeNull();
-
-      memory.close();
+        // Delete Session
+        memory.deleteSession(sessionId);
+        expect(memory.getSession(sessionId)).toBeNull();
+      } finally {
+        memory.close();
+      }
     });
   });
 
