@@ -101,7 +101,7 @@ bun run test:watch    # Watch mode
 | Piece           | Path                       | Role                                                         |
 | --------------- | -------------------------- | ------------------------------------------------------------ |
 | Orchestrator    | `src/orchestrator.ts`      | Plan → execute → verify → replan loop                        |
-| Agents          | `src/agents/`              | Planner, engineer, reviewer, verifier (+ researcher unwired) |
+| Agents          | `src/agents/`              | Planner, engineer, reviewer, verifier                    |
 | Memory / DB     | `src/memory/`, `src/db/`   | SQLite schema, shared agent IR, sessions                     |
 | CLI / TUI       | `src/cli/`                 | Ink UI, approvals, trust gate                                |
 | Safety / cost   | `src/safety/`, `src/cost/` | Loop detector, budget hard-stop                              |
@@ -147,7 +147,7 @@ Everything lives under [`docs/`](docs/README.md):
 | Core orchestrator    | ~85–90%    | Main loop stable; retry/replan edge cases                 |
 | Verification         | ~70%       | Agent path live; integration layer stubbed; no lint layer |
 | Knowledge / semantic | ~60–75%    | Indexer + optional `fastembed` / `sqlite-vec`             |
-| Researcher agent     | ~10%       | Present, not constructed in `Orchestrator`                |
+| Researcher agent     | —          | Removed (dead code; never wired)                          |
 | CLI / TUI            | ~85%       | Both modes work; OpenCode server must be free on port     |
 | Tests                | ~90.6%     | 106/117 pass; Windows `EBUSY` SQLite + timeouts           |
 
@@ -199,7 +199,6 @@ Personal research project. Issues and PRs welcome for bugs and docs.
 - **Windows:** SQLite file locks can fail test cleanup (`EBUSY`) — does not block the app.
 - **OpenCode port:** default server port `4096` must be free; set `OPENCODE_SERVER_PASSWORD`.
 - **LSP:** `LSPClient` spawns `npx typescript-language-server`.
-- **ResearcherAgent:** not wired into the live orchestrator.
 - **`package.json` license field:** still `ISC` while `LICENSE` is MIT — tracked as debt.
 
 ---

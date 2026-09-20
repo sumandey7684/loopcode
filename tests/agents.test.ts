@@ -10,7 +10,6 @@ mock.module('child_process', () => ({
   }),
 }));
 import { PlannerAgent } from '../src/agents/planner.js';
-import { ResearcherAgent } from '../src/agents/researcher.js';
 import { EngineerAgent } from '../src/agents/engineer.js';
 import { ReviewerAgent } from '../src/agents/reviewer.js';
 import { VerifierAgent } from '../src/agents/verifier.js';
@@ -93,29 +92,6 @@ describe('LoopCode Agents', () => {
       expect(taskIR.goalId).toBe('goal-1');
       expect(taskIR.tasks.length).toBe(1);
       expect(taskIR.tasks[0].id).toBe('task-1');
-    });
-  });
-
-  describe('ResearcherAgent', () => {
-    it('returns identified files and symbols', async () => {
-      mockClient.session.prompt.mockResolvedValue({
-        data: {
-          info: {
-            structured_output: {
-              relevantFiles: ['src/config.ts'],
-              relevantSymbols: ['ConfigManager'],
-              apiDetails: 'TOML parsing API',
-            },
-          },
-        },
-      });
-
-      const researcher = new ResearcherAgent(mockClient);
-      const res = await researcher.researchGoal('Check config');
-
-      expect(res.relevantFiles).toContain('src/config.ts');
-      expect(res.relevantSymbols).toContain('ConfigManager');
-      expect(res.apiDetails).toBe('TOML parsing API');
     });
   });
 

@@ -36,7 +36,7 @@ Rules:
 1. Tasks must run sequentially. Order them logically.
 2. Each task must have concrete verification steps (compile, test, lint, security, review).
 3. Assign each task a structured category: "test" | "docs" | "security" | "refactor" | "feature" | "fix" | "other".
-4. Assign each task a specific agent role: "planner" | "researcher" | "engineer" | "reviewer" | "verifier".
+4. Assign each task a specific agent role: "planner" | "engineer" | "reviewer" | "verifier".
 5. For tasks that can run in parallel (same batch), you MUST generate strict, non-overlapping \`writeAllowlist\` arrays to prevent Git merge conflicts.
 6. All tasks must return a JSON array matching the requested schema.
 
@@ -117,7 +117,7 @@ ${failureContext}\
                 required: ['maxCostUsd', 'maxDurationSeconds', 'maxRetries', 'maxTokens'],
               },
               acceptanceCriteria: { type: 'array', items: { type: 'string' } },
-              agentRole: { type: 'string', enum: ['planner', 'researcher', 'engineer', 'reviewer', 'verifier'] },
+              agentRole: { type: 'string', enum: ['planner', 'engineer', 'reviewer', 'verifier'] },
             },
             required: [
               'id',

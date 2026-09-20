@@ -28,7 +28,7 @@ Developers need a local orchestrator that plans, executes, verifies, and budgets
 | Semantic cache (`fastembed` + `sqlite-vec`)                   | ~      | `SemanticMemory`; search wrapped in try/catch               |
 | Integration-test verification layer                           | ~      | Always skipped stub in `VerifierAgent`                      |
 | Dedicated lint verification layer (agent path)                | X      | IR allows `lint`; `VerifierAgent` does not run it           |
-| Researcher agent in live loop                                 | ~      | `ResearcherAgent` exists; not constructed in `Orchestrator` |
+| Researcher agent in live loop                                 | X      | Removed (was never constructed in `Orchestrator`)       |
 
 ## Scope
 

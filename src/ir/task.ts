@@ -38,7 +38,7 @@ export const TaskNodeSchema = z.object({
   modelSpec: ModelSpecSchema,
   budget: BudgetSchema,
   acceptanceCriteria: z.array(z.string()),
-  agentRole: z.enum(['planner', 'researcher', 'engineer', 'reviewer', 'verifier']),
+  agentRole: z.enum(['planner', 'engineer', 'reviewer', 'verifier']),
 });
 
 export const TaskEdgeSchema = z.object({

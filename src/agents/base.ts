@@ -1,6 +1,5 @@
 export enum AgentRole {
   PLANNER = 'planner',
-  RESEARCHER = 'researcher',
   ENGINEER = 'engineer',
   REVIEWER = 'reviewer',
   VERIFIER = 'verifier',

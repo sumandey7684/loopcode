@@ -21,6 +21,7 @@ No git history in this workspace (`fatal: not a git repository`). Status inferre
 ## TODO —
 
 - Wire `ResearcherAgent` into planning/execution (`src/agents/researcher.ts` unused by `Orchestrator`)
++ ~~Wire or remove `ResearcherAgent`~~ ✓ removed dead `ResearcherAgent` (Phase 2)
 - Implement Integration Tests layer (currently always skipped) — `VerifierAgent` ~L118–128 · [VERIFICATION.md](VERIFICATION.md)
 - Run lint layer in `VerifierAgent` (commands in `resolveProjectCommands`; IR allows `lint`)
 - Consume or delete unused `ModelPortfolio` — `src/router/portfolio.ts`

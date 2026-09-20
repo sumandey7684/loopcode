@@ -44,7 +44,7 @@ LoopCode is a local-first autonomous software engineering orchestrator on top of
 | Event bus / logger / redact | `src/app/{events,logger,redact}.ts`                             | Pub/sub, `~/.loopcode/logs/loopcode.log`, secret scrub  |
 | Orchestrator                | `src/orchestrator.ts`                                           | State machine `runGoal` / `resumeTask`                  |
 | OpenCode bridge             | `src/opencode.ts`                                               | SDK client lifecycle, `executeTask`                     |
-| Agents                      | `src/agents/{planner,engineer,reviewer,verifier,researcher}.ts` | Role sessions; researcher unwired                       |
+| Agents                      | `src/agents/{planner,engineer,reviewer,verifier}.ts`            | Role sessions                                           |
 | Memory                      | `src/memory.ts`, `src/memory/engine.ts`, `semantic.ts`          | Task CRUD + shared agent memory + vectors               |
 | Schema                      | `src/db/schema.ts`                                              | Embedded `SCHEMA_SQL`                                   |
 | IR                          | `src/ir/*`                                                      | Zod contracts + `IRValidator`                           |
