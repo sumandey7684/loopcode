@@ -164,7 +164,7 @@ export class ContextEngine {
         try {
           const output = execSync('git ls-files', { encoding: 'utf8' });
           filePaths = output
-            .split('\\n')
+            .split('\n')
             .filter((f) => f.endsWith('.ts') || f.endsWith('.js'))
             .map((f) => path.resolve(process.cwd(), f));
         } catch (e) {

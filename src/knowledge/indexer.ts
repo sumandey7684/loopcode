@@ -37,7 +37,7 @@ export class CodeIndexer {
     try {
       // Find all tracked files that are modified, and all untracked files
       const statusOutput = execSync('git status --porcelain', { cwd: dirPath, encoding: 'utf8' });
-      const lines = statusOutput.split('\\n');
+      const lines = statusOutput.split('\n');
       for (const line of lines) {
         if (line.length > 3) {
           const file = line.substring(3).trim();
