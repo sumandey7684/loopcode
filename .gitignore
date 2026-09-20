@@ -10,3 +10,5 @@ sea-prep.blob
 .npmrc
 LOOPCODE_V4_PLAN.md
 loopcode-architecture.html
+
+test_results*.txt
