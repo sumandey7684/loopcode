@@ -94,6 +94,28 @@ bun run test:watch    # Watch mode
 
 ---
 
+## Live Demo
+
+Screenshots from a live Windows run (`bun run tui:dev` / headless CLI). OpenCode binds `127.0.0.1:4096`; provider login is required for full plan → execute → verify model work.
+
+### Interactive TUI
+
+![LoopCode TUI startup — directory trust](assets/loopcode-tui-startup.png)
+
+*Startup: Welcome splash + directory trust gate (`Yes, trust permanently` / session / exit).*
+
+![LoopCode TUI session — provider connect](assets/loopcode-tui-session.png)
+
+*Active onboarding: “Connect an LLM Provider” (API key/OAuth, Antigravity proxy, or skip). OpenCode may report empty provider catalog until credentials are saved.*
+
+### CLI headless mode
+
+![LoopCode CLI headless run](assets/loopcode-cli-output.png)
+
+*Headless invocation: `bun dist/index.js --headless "…"` — live exit code `0` with OpenCode server start; full orchestration needs prior `/login`.*
+
+---
+
 ## Project Metrics & Stats
 
 ### Codebase
