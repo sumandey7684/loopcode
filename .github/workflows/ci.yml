@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run format:check
+
+      - run: bun run lint
+
+      - run: bun x tsc -p tsconfig.test.json
+
+      - run: bun test
+        env:
+          LOOPCODE_TEST: '1'
+          NO_COLOR: '1'
+
+      - name: Guard against regressions
+        run: |
+          set -e
+          ! grep -rn "process.env.VITEST" src/
+          ! grep -rn "console.log = " src/
+          ! grep -rn "1049h" src/
+          ! grep -rn "npm install -g" src/
+          ! grep -rn "0\.0\.0\.0" src/

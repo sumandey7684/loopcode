@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LoopCode — Autonomous Software Orchestrator</title>
+    <meta
+      name="description"
+      content="A CLI and Ink-based TUI software orchestrator built on OpenCode to run code modifications safely via parallel git worktrees and 5-layer verifications."
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="bg-grid"></div>
+
+    <!-- Header -->
+    <header>
+      <div class="container header-inner">
+        <a href="#" class="logo">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            <path d="M2 12h20"></path>
+          </svg>
+          <span>loopcode</span>
+        </a>
+        <nav class="header-nav">
+          <a href="#tui-showcase">tui interface</a>
+          <a href="#features">mechanics</a>
+          <a href="#cli-reference">cli reference</a>
+          <a href="#config-reference">configuration</a>
+          <a href="https://github.com/arjun-vegeta/loopCode" target="_blank">github</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="container hero">
+      <div style="margin-bottom: 20px">
+        <span
+          style="
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            border: 1px solid var(--border-tui);
+            padding: 4px 10px;
+            border-radius: 100px;
+            color: var(--tui-cyan);
+          "
+          >built on top of opencode</span
+        >
+      </div>
+
+      <h1>Autonomous software engineering</h1>
+      <p>
+        A headless CLI orchestrator built on OpenCode that decomposes natural language goals into a task DAG, executing
+        branches concurrently in isolated Git worktrees with strict 5-layer verification.
+      </p>
+
+      <div class="cmd-badge">
+        <span>curl -fsSL https://raw.githubusercontent.com/arjun-vegeta/loopCode/main/install.sh | bash</span>
+        <button id="copy-cmd-btn" aria-label="Copy Install Command">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- TUI Showcase component -->
+      <div class="tui-container" id="tui-showcase">
+        <!-- TUI Header -->
+        <div class="tui-header">
+          <div class="tui-title-group">
+            <span class="tui-title">LoopCode v2.0.0</span>
+            <span class="tui-meta">· loopcode · main · claude-3-5-sonnet</span>
+          </div>
+          <span class="tui-status-tag" id="tui-sim-indicator">simulation running</span>
+        </div>
+
+        <!-- TUI Workspace Body -->
+        <div class="tui-body">
+          <!-- Live Transcript Scroll area -->
+          <div class="tui-transcript" id="tui-transcript-stream">
+            <!-- Populated dynamically by app.js -->
+          </div>
+
+          <!-- Inline TUI Overlays (Matching actual ink component structures) -->
+
+          <!-- 1. Tasks Overlay -->
+          <div class="tui-overlay-container" id="overlay-tasks">
+            <div class="tui-overlay-title">
+              <span class="title-text">Task Execution Graph</span>
+              <span class="close-hint">esc / click to close</span>
+            </div>
+            <div class="tui-overlay-content">
+              <div class="tui-task-row">
+                <span>1. Index codebase workspace</span>
+                <span class="tui-task-state success" id="task-snap-1">✓ completed</span>
+              </div>
+              <div class="tui-task-row">
+                <span>2. Write profile route configs</span>
+                <span class="tui-task-state success" id="task-snap-2">✓ completed</span>
+              </div>
+              <div class="tui-task-row">
+                <span>3. Write profile controller implementation</span>
+                <span class="tui-task-state success" id="task-snap-3">✓ completed</span>
+              </div>
+              <div class="tui-task-row">
+                <span>4. Write profile endpoint integrations</span>
+                <span class="tui-task-state success" id="task-snap-4">✓ completed</span>
+              </div>
+              <div class="tui-task-row">
+                <span>5. Validate code & review merge</span>
+                <span class="tui-task-state success" id="task-snap-5">✓ completed</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Verification Overlay -->
+          <div class="tui-overlay-container" id="overlay-verify">
+            <div class="tui-overlay-title">
+              <span class="title-text">Verification Detail (5-Layer Gauntlet)</span>
+              <span class="close-hint">esc / click to close</span>
+            </div>
+            <div class="tui-overlay-content">
+              <div class="tui-verify-layer passed" id="v-layer-1">✓ Layer 1: Compilation (compile)</div>
+              <div class="tui-verify-layer passed" id="v-layer-2">✓ Layer 2: Formatting &amp; Linters (lint)</div>
+              <div class="tui-verify-layer passed" id="v-layer-3">✓ Layer 3: Integration test execution (tests)</div>
+              <div class="tui-verify-layer passed" id="v-layer-4">✓ Layer 4: Static security analysis (semgrep)</div>
+              <div class="tui-verify-layer passed" id="v-layer-5">✓ Layer 5: Peer review assessment (ai-review)</div>
+            </div>
+          </div>
+
+          <!-- 3. Budget Overlay -->
+          <div class="tui-overlay-container" id="overlay-budget">
+            <div class="tui-overlay-title">
+              <span class="title-text">Quota Spend Control</span>
+              <span class="close-hint">esc / click to close</span>
+            </div>
+            <div class="tui-overlay-content" style="gap: 16px">
+              <div>
+                <div style="color: var(--tui-white); margin-bottom: 4px">Goal cost audit</div>
+                <div>spend: $0.18 / limit: $10.00</div>
+                <div style="color: var(--text-muted); font-size: 0.7rem; margin-top: 4px">
+                  [████░░░░░░░░░░░░░░░░░░░░░] 1.8%
+                </div>
+              </div>
+              <div>
+                <div style="color: var(--tui-white); margin-bottom: 4px">Monthly cost audit</div>
+                <div>spend: $32.40 / limit: $100.00</div>
+                <div style="color: var(--text-muted); font-size: 0.7rem; margin-top: 4px">
+                  [████████░░░░░░░░░░░░░░░░░] 32.4%
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Help Overlay -->
+          <div class="tui-overlay-container" id="overlay-help">
+            <div class="tui-overlay-title">
+              <span class="title-text">Keyboard Shortcuts</span>
+              <span class="close-hint">esc / click to close</span>
+            </div>
+            <div class="tui-overlay-content" style="gap: 12px">
+              <div style="display: flex; justify-content: space-between">
+                <span>t / Tab</span><span style="color: var(--tui-white)">open task list</span>
+              </div>
+              <div style="display: flex; justify-content: space-between">
+                <span>v</span><span style="color: var(--tui-white)">open verification details</span>
+              </div>
+              <div style="display: flex; justify-content: space-between">
+                <span>b</span><span style="color: var(--tui-white)">open spend limits</span>
+              </div>
+              <div style="display: flex; justify-content: space-between">
+                <span>ctrl+c</span><span style="color: var(--tui-white)">interrupt task execution</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- TUI LiveStatus row -->
+          <div class="tui-livestatus">
+            <div class="tui-status-left">
+              <span class="tui-spinner" id="tui-spinner-char">⠋</span>
+              <span class="tui-phase-value" id="tui-phase-txt">idle</span>
+              <span style="color: var(--text-dim)">·</span>
+              <span class="tui-detail-value" id="tui-detail-txt">waiting for input</span>
+            </div>
+            <div class="tui-status-right">
+              <span>spent: <span class="tui-cost-value" id="tui-cost-txt">$0.00</span> / $10.00</span>
+            </div>
+          </div>
+
+          <!-- TUI Composer/Prompt line -->
+          <div class="tui-composer">
+            <span class="tui-prompt-symbol">&gt;</span>
+            <span class="tui-composer-text" id="tui-composer-input"
+              >"Add a new endpoint for user profile retrieval"</span
+            >
+            <span class="tui-cursor" id="tui-cursor-indicator"></span>
+          </div>
+        </div>
+
+        <!-- TUI Bottom Hints / interactive controls -->
+        <div class="tui-hints">
+          <div class="tui-hint-item" data-overlay="tasks" id="hint-tasks"><span>[t]</span> tasks</div>
+          <div class="tui-hint-item" data-overlay="verify" id="hint-verify"><span>[v]</span> verify</div>
+          <div class="tui-hint-item" data-overlay="budget" id="hint-budget"><span>[b]</span> budget</div>
+          <div class="tui-hint-item" data-overlay="help" id="hint-help"><span>[h]</span> help</div>
+          <div style="margin-left: auto; display: flex; gap: 16px">
+            <div class="tui-hint-item" id="ctrl-sim-toggle"><span>[space]</span> pause</div>
+            <div class="tui-hint-item" id="ctrl-sim-reset"><span>[r]</span> restart</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core product breakdown (Words less, TUI elements more) -->
+    <section class="container" id="features">
+      <h2 class="section-title">engine mechanics</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>shared sqlite memory</h3>
+          <p>
+            Central structured persistence decouples agents. Communication happens asynchronously via data contracts,
+            avoiding direct process dependencies.
+          </p>
+        </div>
+        <div class="feature-card">
+          <h3>topological schedules</h3>
+          <p>
+            Sorts task DAGs based on resource allowlists. Spawns independent subtasks in parallel, executing changes in
+            isolated Git worktrees.
+          </p>
+        </div>
+        <div class="feature-card">
+          <h3>5-layer verification</h3>
+          <p>
+            Integrates compilation audits, linter scans, Bun unit testing checks, Semgrep code security patterns, and AI
+            review loops before merging.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLI options reference -->
+    <section class="container" id="cli-reference">
+      <h2 class="section-title">cli runtime parameters</h2>
+      <div class="cli-options">
+        <div class="cli-option-row">
+          <div class="cli-option-name">loopcode "&lt;goal&gt;"</div>
+          <div class="cli-option-desc">
+            Accepts a natural language instruction to plan, construct worktrees, and verify code blocks.
+          </div>
+        </div>
+        <div class="cli-option-row">
+          <div class="cli-option-name">-d, --db &lt;path&gt;</div>
+          <div class="cli-option-desc">
+            Specifies the path to the SQLite persistence database (defaults to loopcode.db).
+          </div>
+        </div>
+        <div class="cli-option-row">
+          <div class="cli-option-name">-r, --resume &lt;id&gt;</div>
+          <div class="cli-option-desc">Resumes execution from a previously interrupted Session ID or Task ID.</div>
+        </div>
+        <div class="cli-option-row">
+          <div class="cli-option-name">--login</div>
+          <div class="cli-option-desc">
+            Launches the in-terminal interactive authentication workflow for platform providers.
+          </div>
+        </div>
+        <div class="cli-option-row">
+          <div class="cli-option-name">--headless</div>
+          <div class="cli-option-desc">Forces non-interactive execution suite mode (ideal for CI/CD environments).</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toml config details -->
+    <section class="container" id="config-reference" style="text-align: center; margin: 80px auto 100px auto">
+      <h2 class="section-title">controlled configuration</h2>
+      <div style="max-width: 600px; margin: 0 auto 32px auto">
+        <p style="margin-bottom: 12px">
+          Configure parameters inside ~/.loopcode/config.toml to restrict model routing definitions, set maximum spend
+          ceilings, and establish validation protocols.
+        </p>
+        <p style="font-size: 0.85rem; color: var(--text-muted)">
+          Compatible with all 100+ OpenCode model routers. Route subtasks dynamically to the optimal model based on
+          prompt complexity, cost thresholds, and cached instructions.
+        </p>
+      </div>
+      <div style="display: flex; justify-content: center; width: 100%">
+        <pre class="config-code-block" style="text-align: left; width: 100%; max-width: 540px; margin: 0 auto">
+[model]
+default      = "anthropic/claude-sonnet-4-6"
+planning     = "anthropic/claude-opus-4-6"
+
+[budget]
+maxMonthlyCostUsd = 100.0
+maxGoalCostUsd    = 10.0
+maxTaskCostUsd    = 2.0
+
+[safety]
+permissionMode           = "acceptEdits"
+allowDestructiveRollback = false
+maxParallelAgents        = 5</pre>
+      </div>
+    </section>
+
+    <!-- Setup section with gradient -->
+    <section class="container" id="setup">
+      <div class="setup-box">
+        <h2 style="font-size: 1.6rem; font-weight: 300; margin-bottom: 8px">Install LoopCode CLI Now</h2>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px">
+          Run standalone binary anywhere in seconds. Built on top of OpenCode with support for 100+ AI models.
+        </p>
+        <div class="cmd-badge" style="margin-bottom: 0">
+          <span>curl -fsSL https://raw.githubusercontent.com/arjun-vegeta/loopCode/main/install.sh | bash</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container footer-inner">
+        <span>loopcode orchestrator. built on top of opencode. released under mit license.</span>
+        <span>github.com/arjun-vegeta/loopCode</span>
+      </div>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

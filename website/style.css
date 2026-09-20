@@ -1,0 +1,633 @@
+/* 
+  LoopCode Clean Monospace TUI Design System
+  Replicates the exact terminal experience of LoopCode in a premium browser asset.
+  Focuses on thin lines, box borders, high-contrast monospace typography, and zero slop.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@200;300;400;500&family=Geist:wght@200;300;400;500&display=swap');
+
+:root {
+  --bg-page: #000000;
+  --bg-tui: #050507;
+  --bg-overlay: #0a0a0d;
+
+  --border-tui: rgba(255, 255, 255, 0.08);
+  --border-active: rgba(255, 255, 255, 0.25);
+
+  --text-primary: #f5f5f7;
+  --text-muted: #6e6e73;
+  --text-dim: #3a3a3c;
+
+  /* TUI Theme Colors */
+  --tui-cyan: #00f0ff;
+  --tui-cyan-dim: #0088cc;
+  --tui-green: #39d353;
+  --tui-yellow: #f1e05a;
+  --tui-red: #ff453a;
+  --tui-gray: #8e8e93;
+  --tui-white: #ffffff;
+
+  --font-mono: 'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace;
+  --font-sans: 'Geist', sans-serif;
+
+  --transition-smooth: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: 80px;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--tui-white);
+}
+
+p {
+  color: var(--text-muted);
+  font-weight: 300;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Header */
+header {
+  height: 64px;
+  border-bottom: 1px solid var(--border-tui);
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+}
+
+.header-inner {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-family: var(--font-mono);
+}
+
+.logo svg {
+  width: 16px;
+  height: 16px;
+  color: var(--tui-cyan);
+}
+
+.header-nav {
+  display: flex;
+  gap: 24px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.header-nav a:hover {
+  color: var(--text-primary);
+}
+
+/* Hero */
+.hero {
+  padding: 60px 0 30px 0;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 12px;
+}
+
+.hero p {
+  max-width: 540px;
+  margin: 0 auto 24px auto;
+  font-size: 0.95rem;
+}
+
+/* Copyable installation badge */
+.cmd-badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-tui);
+  border: 1px solid var(--border-tui);
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  margin-bottom: 40px;
+}
+
+.cmd-badge span {
+  opacity: 0.8;
+}
+
+.cmd-badge button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-left: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.cmd-badge button:hover {
+  color: var(--tui-white);
+}
+
+/* High Fidelity TUI Component Shell */
+.tui-container {
+  background: var(--bg-tui);
+  border: 1px solid var(--border-tui);
+  border-radius: 8px;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  margin-bottom: 60px;
+}
+
+/* Header line in TUI */
+.tui-header {
+  height: 32px;
+  border-bottom: 1px dashed var(--border-tui);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  user-select: none;
+}
+
+.tui-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tui-title {
+  color: var(--tui-cyan);
+}
+
+.tui-meta {
+  color: var(--text-muted);
+}
+
+.tui-status-tag {
+  color: var(--text-muted);
+}
+
+/* Workspace Panels */
+.tui-body {
+  height: 440px;
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+/* Scrolling transcript list */
+.tui-transcript {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+  padding-right: 8px;
+}
+
+/* Custom Scrollbar for Transcript */
+.tui-transcript::-webkit-scrollbar {
+  width: 4px;
+}
+.tui-transcript::-webkit-scrollbar-track {
+  background: transparent;
+}
+.tui-transcript::-webkit-scrollbar-thumb {
+  background: var(--border-tui);
+  border-radius: 2px;
+}
+
+.tui-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.tui-bullet {
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.tui-content {
+  color: var(--text-primary);
+  white-space: pre-wrap;
+}
+
+.tui-content.success {
+  color: var(--tui-green);
+}
+.tui-content.error {
+  color: var(--tui-red);
+}
+.tui-content.warning {
+  color: var(--tui-yellow);
+}
+.tui-content.info {
+  color: var(--tui-cyan);
+}
+.tui-content.dim {
+  color: var(--text-muted);
+}
+
+/* Live Status indicator row */
+.tui-livestatus {
+  border-top: 1px dashed var(--border-tui);
+  border-bottom: 1px dashed var(--border-tui);
+  padding: 10px 0;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  user-select: none;
+}
+
+.tui-status-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tui-spinner {
+  color: var(--tui-cyan);
+}
+
+.tui-phase-value {
+  color: var(--tui-cyan);
+}
+
+.tui-detail-value {
+  color: var(--tui-white);
+}
+
+.tui-status-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.tui-cost-value {
+  color: var(--tui-green);
+}
+
+/* Composer / Input line */
+.tui-composer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  font-size: 0.8rem;
+}
+
+.tui-prompt-symbol {
+  color: var(--tui-cyan);
+  user-select: none;
+}
+
+.tui-composer-text {
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.tui-composer-text.working {
+  color: var(--text-muted);
+}
+
+.tui-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 14px;
+  background: var(--tui-white);
+  vertical-align: middle;
+  animation: tuiBlink 1s step-end infinite;
+}
+
+@keyframes tuiBlink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Hint Bar / Controls at bottom */
+.tui-hints {
+  background: rgba(255, 255, 255, 0.01);
+  border-top: 1px solid var(--border-tui);
+  height: 36px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  gap: 16px;
+  user-select: none;
+}
+
+.tui-hint-item {
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.tui-hint-item span {
+  color: var(--tui-cyan);
+}
+
+.tui-hint-item:hover {
+  color: var(--text-primary);
+}
+
+.tui-hint-item.active {
+  color: var(--tui-cyan);
+}
+
+/* TUI Inline Overlays (Box drawing style) */
+.tui-overlay-container {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  bottom: 84px;
+  background: var(--bg-overlay);
+  border: 1px solid var(--tui-cyan);
+  border-radius: 4px;
+  z-index: 10;
+  display: none; /* controlled by JS */
+  flex-direction: column;
+  padding: 12px 16px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.9);
+}
+
+.tui-overlay-container.active {
+  display: flex;
+}
+
+.tui-overlay-title {
+  color: var(--tui-cyan);
+  font-size: 0.8rem;
+  border-bottom: 1px dashed var(--border-tui);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tui-overlay-title span.title-text {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tui-overlay-title span.close-hint {
+  color: var(--text-muted);
+  font-size: 0.65rem;
+}
+
+.tui-overlay-content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tui-task-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  padding-bottom: 4px;
+}
+
+.tui-task-name {
+  color: var(--tui-white);
+}
+
+.tui-task-state {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.tui-task-state.success {
+  color: var(--tui-green);
+}
+.tui-task-state.failed {
+  color: var(--tui-red);
+}
+.tui-task-state.running {
+  color: var(--purple);
+}
+.tui-task-state.pending {
+  color: var(--text-muted);
+}
+
+/* Verification Overlay layers */
+.tui-verify-layer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+}
+
+.tui-verify-layer.passed {
+  color: var(--tui-green);
+}
+.tui-verify-layer.failed {
+  color: var(--tui-red);
+}
+.tui-verify-layer.pending {
+  color: var(--text-dim);
+}
+
+/* Minimal project breakdown section */
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--border-tui);
+  padding-bottom: 12px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-bottom: 80px;
+}
+
+.feature-card {
+  border: 1px solid var(--border-tui);
+  background: var(--bg-tui);
+  border-radius: 4px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: var(--transition-smooth);
+}
+
+.feature-card:hover {
+  border-color: var(--border-active);
+}
+
+.feature-card h3 {
+  font-size: 1rem;
+  font-family: var(--font-mono);
+  color: var(--tui-cyan);
+}
+
+.feature-card p {
+  font-size: 0.85rem;
+}
+
+/* CLI Options block */
+.cli-options {
+  margin-bottom: 8px;
+}
+
+.cli-option-row {
+  display: flex;
+  border-bottom: 1px solid var(--border-tui);
+  padding: 12px 0;
+  font-size: 0.85rem;
+}
+
+.cli-option-name {
+  width: 240px;
+  font-family: var(--font-mono);
+  color: var(--tui-cyan-dim);
+}
+
+.cli-option-desc {
+  flex: 1;
+  color: var(--text-muted);
+}
+
+/* Monospace toml config layout */
+.config-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 40px;
+  margin: 60px 0 80px 0;
+  align-items: center;
+}
+
+.config-code-block {
+  background: var(--bg-tui);
+  border: 1px solid var(--border-tui);
+  border-radius: 4px;
+  padding: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--tui-white);
+  overflow-x: auto;
+}
+
+.config-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+}
+
+/* Setup Section */
+.setup-box {
+  background: radial-gradient(circle at top, rgba(0, 240, 255, 0.04) 0%, rgba(5, 5, 7, 0.95) 100%), var(--bg-tui);
+  border: 1px solid var(--border-tui);
+  border-radius: 6px;
+  padding: 56px 48px;
+  text-align: center;
+  margin-bottom: 100px;
+  box-shadow: 0 20px 80px rgba(0, 240, 255, 0.02);
+}
+
+/* Footer styling */
+footer {
+  border-top: 1px dashed var(--border-tui);
+  padding: 40px 0;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 900px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  .config-layout {
+    grid-template-columns: 1fr;
+  }
+  .tui-livestatus {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .cli-option-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .cli-option-name {
+    width: 100%;
+  }
+}

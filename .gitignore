@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.db*
+build_docs/
+local_cache/
+loopcode
+sea-prep.blob
+.loopcode-tmp-*.mjs
+.env
+.npmrc
+LOOPCODE_V4_PLAN.md
+loopcode-architecture.html

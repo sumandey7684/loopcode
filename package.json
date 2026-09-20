@@ -1,0 +1,67 @@
+{
+  "name": "loopcode",
+  "version": "2.0.0",
+  "main": "dist/index.js",
+  "bin": {
+    "loopcode": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc -p tsconfig.test.json",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "package": "./package.sh",
+    "cli:dev": "bun dist/index.js --headless",
+    "tui:dev": "bun dist/index.js",
+    "prepublishOnly": "npm run build && npm run typecheck && npm run lint && npm run test"
+  },
+  "keywords": [
+    "loopcode",
+    "ai",
+    "agent",
+    "orchestrator",
+    "opencode",
+    "cli",
+    "tui"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "Autonomous software engineering orchestrator built on top of OpenCode",
+  "dependencies": {
+    "@opencode-ai/sdk": "^1.17.13",
+    "commander": "^15.0.0",
+    "fastembed": "^2.1.0",
+    "ink": "^7.1.0",
+    "react": "^19.2.7",
+    "smol-toml": "^1.7.0",
+    "sqlite-vec": "^0.1.9",
+    "tree-sitter": "^0.21.1",
+    "tree-sitter-javascript": "^0.21.3",
+    "tree-sitter-typescript": "^0.21.2",
+    "typescript": "^6.0.3",
+    "typescript-language-server": "^5.3.0",
+    "zod": "4.4.3"
+  },
+  "type": "module",
+  "trustedDependencies": [
+    "tree-sitter",
+    "tree-sitter-javascript",
+    "tree-sitter-typescript",
+    "sqlite-vec"
+  ],
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "bun-types": "latest",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "ink-testing-library": "4.0.0",
+    "prettier": "^3.9.4",
+    "typescript-eslint": "^8.62.1"
+  }
+}
