@@ -42,4 +42,4 @@ Related: [ARCHITECTURE.md](ARCHITECTURE.md) · [TASKS.md](TASKS.md)
 
 - **Decision:** `configStore` + Zod `ConfigSchema` at `~/.loopcode/config.toml`; `ConfigManager` marked `@deprecated`.
 - **Reasoning:** Precedence list in `config/schema.ts`; deprecation JSDoc on `config.ts`.
-- **Trade-offs:** `CostEngine.loadConfig` still reads cwd `./config.toml` `[budgets]` independently — budget *enforcement* uses `ConfigManager`/`configStore`. See [CONFIG.md](CONFIG.md).
+- **Trade-offs:** `CostEngine.loadConfig` still reads cwd `./config.toml` `[budgets]` independently — budget _enforcement_ uses `ConfigManager`/`configStore`. See [CONFIG.md](CONFIG.md).

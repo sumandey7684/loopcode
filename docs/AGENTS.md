@@ -41,11 +41,11 @@ re-plan (retries exhausted) ◄── [VERIFYING] ──────────
 
 Handled in `Orchestrator.requestApproval` / CLI state:
 
-| Mode | Behavior |
-| --- | --- |
-| `auto` | Auto-approve non-destructive; destructive need approval |
-| `acceptEdits` | Auto-approve file edits; shell needs approval |
-| `plan` | Approve edits and shell explicitly |
-| `--headless` | Auto-approve non-destructive; decline destructive |
+| Mode          | Behavior                                                |
+| ------------- | ------------------------------------------------------- |
+| `auto`        | Auto-approve non-destructive; destructive need approval |
+| `acceptEdits` | Auto-approve file edits; shell needs approval           |
+| `plan`        | Approve edits and shell explicitly                      |
+| `--headless`  | Auto-approve non-destructive; decline destructive       |
 
 Directory trust gate: [CLI.md](CLI.md#3-directory-trust-gate).

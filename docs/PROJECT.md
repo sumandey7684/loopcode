@@ -14,21 +14,21 @@ Developers need a local orchestrator that plans, executes, verifies, and budgets
 
 ## Core features (from code)
 
-| Feature | Status | Evidence |
-| --- | --- | --- |
-| Goal CLI + resume + login + headless | ✓ | `src/index.ts`, `src/cli/runner.tsx` |
-| Ink transcript TUI + onboarding | ✓ | `src/cli/app.tsx`, `src/cli/components/**` |
-| State machine: planning → executing → verifying → done/failed | ✓ | `Orchestrator` in `src/orchestrator.ts` |
-| SQLite persistence (tasks, sessions, agent memory) | ✓ | `src/db/schema.ts`, `Memory`, `MemoryEngine` |
-| Multi-agent plan/execute/verify via OpenCode SDK | ✓ | `src/agents/*`, `src/opencode.ts` |
-| Worktree-batched parallel execution | ✓ | `GitWorktreeScheduler` in `src/scheduler/worktree.ts` |
-| Budget caps → exit `77` | ✓ | `CostEngine`, `EXIT.BUDGET_EXCEEDED` |
-| Loop/oscillation detection + escalation | ✓ | `src/safety/loop.ts`, `promptUserForEscalation` |
-| Auth / provider catalog / Antigravity proxy | ✓ | `src/auth/*`, `src/proxy/*` |
-| Semantic cache (`fastembed` + `sqlite-vec`) | ~ | `SemanticMemory`; search wrapped in try/catch |
-| Integration-test verification layer | ~ | Always skipped stub in `VerifierAgent` |
-| Dedicated lint verification layer (agent path) | X | IR allows `lint`; `VerifierAgent` does not run it |
-| Researcher agent in live loop | ~ | `ResearcherAgent` exists; not constructed in `Orchestrator` |
+| Feature                                                       | Status | Evidence                                                    |
+| ------------------------------------------------------------- | ------ | ----------------------------------------------------------- |
+| Goal CLI + resume + login + headless                          | ✓      | `src/index.ts`, `src/cli/runner.tsx`                        |
+| Ink transcript TUI + onboarding                               | ✓      | `src/cli/app.tsx`, `src/cli/components/**`                  |
+| State machine: planning → executing → verifying → done/failed | ✓      | `Orchestrator` in `src/orchestrator.ts`                     |
+| SQLite persistence (tasks, sessions, agent memory)            | ✓      | `src/db/schema.ts`, `Memory`, `MemoryEngine`                |
+| Multi-agent plan/execute/verify via OpenCode SDK              | ✓      | `src/agents/*`, `src/opencode.ts`                           |
+| Worktree-batched parallel execution                           | ✓      | `GitWorktreeScheduler` in `src/scheduler/worktree.ts`       |
+| Budget caps → exit `77`                                       | ✓      | `CostEngine`, `EXIT.BUDGET_EXCEEDED`                        |
+| Loop/oscillation detection + escalation                       | ✓      | `src/safety/loop.ts`, `promptUserForEscalation`             |
+| Auth / provider catalog / Antigravity proxy                   | ✓      | `src/auth/*`, `src/proxy/*`                                 |
+| Semantic cache (`fastembed` + `sqlite-vec`)                   | ~      | `SemanticMemory`; search wrapped in try/catch               |
+| Integration-test verification layer                           | ~      | Always skipped stub in `VerifierAgent`                      |
+| Dedicated lint verification layer (agent path)                | X      | IR allows `lint`; `VerifierAgent` does not run it           |
+| Researcher agent in live loop                                 | ~      | `ResearcherAgent` exists; not constructed in `Orchestrator` |
 
 ## Scope
 
@@ -48,14 +48,14 @@ Developers need a local orchestrator that plans, executes, verifies, and budgets
 
 ### CLI / process interface
 
-| Interface | Status | Location |
-| --- | --- | --- |
-| `loopcode [goal]` | ✓ | `src/index.ts` → `runCli` |
-| `-r, --resume <taskId>` (resolves session→goal) | ✓ | `SessionControllerImpl.resume` |
-| `-d, --db <path>` default `cwd/loopcode.db` | ✓ | `defaultDbPath()` |
-| `--login` | ✓ | `forceLogin` → onboarding |
-| `--headless` | ✓ | sets `LOOPCODE_HEADLESS=1` |
-| Exit `0/1/77/130` | ✓ | `EXIT` in `src/index.ts` |
+| Interface                                       | Status | Location                       |
+| ----------------------------------------------- | ------ | ------------------------------ |
+| `loopcode [goal]`                               | ✓      | `src/index.ts` → `runCli`      |
+| `-r, --resume <taskId>` (resolves session→goal) | ✓      | `SessionControllerImpl.resume` |
+| `-d, --db <path>` default `cwd/loopcode.db`     | ✓      | `defaultDbPath()`              |
+| `--login`                                       | ✓      | `forceLogin` → onboarding      |
+| `--headless`                                    | ✓      | sets `LOOPCODE_HEADLESS=1`     |
+| Exit `0/1/77/130`                               | ✓      | `EXIT` in `src/index.ts`       |
 
 TUI keybindings and slash commands: [CLI.md](CLI.md). Config file shape: [CONFIG.md](CONFIG.md).
 
@@ -84,15 +84,15 @@ Defined in `src/db/schema.ts` (must match `db/schema.sql` — `tests/schema.test
 
 ## Non-functional constraints
 
-| Concern | Constraint | Evidence |
-| --- | --- | --- |
-| Local-first | State in project DB + `~/.loopcode/` | `platform/paths.ts` |
-| Parallelism | `safety.maxParallelAgents` default 5 | `config/schema.ts` |
-| Budget hard-stop | Throws `BudgetExceededError` → exit 77 | `cost/engine.ts`, CLI catch |
-| Secrets | EventBus scrub / `redact.ts` | `app/events.ts` |
-| Destructive git | Opt-in `allowDestructiveRollback` | `orchestrator.rollbackWorkspace` |
-| Headless safety | Destructive approvals denied; loop → abort | `requestApproval`, `promptUserForEscalation` |
-| Runtime | Bun (`bun:sqlite`, scripts); Node shebang on CLI | `package.json`, `index.ts` |
+| Concern          | Constraint                                       | Evidence                                     |
+| ---------------- | ------------------------------------------------ | -------------------------------------------- |
+| Local-first      | State in project DB + `~/.loopcode/`             | `platform/paths.ts`                          |
+| Parallelism      | `safety.maxParallelAgents` default 5             | `config/schema.ts`                           |
+| Budget hard-stop | Throws `BudgetExceededError` → exit 77           | `cost/engine.ts`, CLI catch                  |
+| Secrets          | EventBus scrub / `redact.ts`                     | `app/events.ts`                              |
+| Destructive git  | Opt-in `allowDestructiveRollback`                | `orchestrator.rollbackWorkspace`             |
+| Headless safety  | Destructive approvals denied; loop → abort       | `requestApproval`, `promptUserForEscalation` |
+| Runtime          | Bun (`bun:sqlite`, scripts); Node shebang on CLI | `package.json`, `index.ts`                   |
 
 ## System interfaces
 
